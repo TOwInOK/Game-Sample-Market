@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Itim } from "next/font/google";
+import NavBar from "./ui/nav_bar";
+import { CartProvider } from "./cartapi/cart";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const itim = Itim({
+  subsets: ["latin"],
+  style: ["normal"],
+  weight: ["400"],
+  variable: "--font-itim",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +23,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={`w-screen h-screen p-28 bg-white flex-col justify-start items-start gap-2.5 flex`}
+      >
+        <CartProvider>
+          <NavBar />
+          <div
+            className={`${itim.className} self-stretch grow shrink basis-0 px-5 py-9 rounded-lg border-8 border-black border-dashed flex justify-center items-center gap-14`}
+          >
+            {children}
+          </div>
+        </CartProvider>
+      </body>
     </html>
   );
 }
