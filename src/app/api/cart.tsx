@@ -4,8 +4,8 @@ import {
   ProductContext,
   Products,
   StateSelector,
-} from "@/app/cartapi/Products";
-import { Product } from "@/app/cartapi/Product";
+} from "@/app/api/products/Products";
+import { Product } from "@/app/api/products/Product";
 
 const initialProducts: Products = { vec: [] };
 export const CartProvider = ({ children }: { children: ReactNode }) => {

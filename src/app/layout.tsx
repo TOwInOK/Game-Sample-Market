@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Itim } from "next/font/google";
 import NavBar from "./ui/nav_bar";
-import { CartProvider } from "./cartapi/cart";
+import { CartProvider } from "@/app/api/cart";
 import "./globals.css";
 
 const itim = Itim({
@@ -24,15 +24,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-screen h-screen p-28 bg-white flex-col justify-start items-start gap-2.5 flex`}
+        className={`w-screen h-screen p-28 flex-col justify-start items-start gap-2.5 flex dark:bg-black dark:text-white dark:border-white`}
       >
         <CartProvider>
           <NavBar />
-          <div
-            className={`${itim.className} self-stretch grow shrink basis-0 px-5 py-9 rounded-lg border-8 border-black border-dashed flex justify-center items-center gap-14`}
+          <main
+            className={`${itim.className} self-stretch grow shrink basis-0 px-5 py-9 rounded-lg border-8  border-dashed flex justify-center items-center gap-14`}
           >
             {children}
-          </div>
+          </main>
         </CartProvider>
       </body>
     </html>

@@ -25,7 +25,7 @@ export default function NavBar() {
               <Link key={link.name} href={link.href}>
                 <p
                   className={clsx(
-                    "text-black text-3xl font-normal font-itim uppercase",
+                    "text-3xl font-normal font-itim uppercase",
                     { underline: pathname === link.href },
                     {
                       "transition duration-300 ease-in-out transform hover:scale-110 hover:underline":
