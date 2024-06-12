@@ -2,23 +2,23 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCart, useGetPrice } from "../cartapi/cart";
+import {useGetPrice, useRemoveFromCart} from "../cartapi/cart";
 export default function Cart() {
-  const CURRENTPATH = usePathname();
-  const PATHS = ["/products", "/cart"];
-  const { dispatch } = useCart();
+  const currentPath = usePathname();
+  const paths = ["/products", "/cart"];
+  const {removeAllItems } = useRemoveFromCart();
 
   return (
     <div
       className={clsx(
         "p-2.5 justify-center items-center gap-5 inline-flex",
         {
-          "border-black border-2 rounded-lg": PATHS.some((path) =>
-            CURRENTPATH.includes(path),
+          "border-black border-2 rounded-lg": paths.some((path) =>
+            currentPath.includes(path),
           ),
         },
         {
-          "pb-8": !PATHS.some((path) => CURRENTPATH.includes(path)),
+          "pb-8": !paths.some((path) => currentPath.includes(path)),
         },
       )}
     >
@@ -35,14 +35,14 @@ export default function Cart() {
       </>
       <div
         className={clsx("flex justify-center items-center gap-3", {
-          hidden: !PATHS.some((path) => CURRENTPATH.includes(path)),
+          hidden: !paths.some((path) => currentPath.includes(path)),
         })}
       >
         <div className="text-black text-3xl font-normal font-itim uppercase">
           {useGetPrice()}$
         </div>
         <button
-          onClick={() => dispatch({ type: "REMOVE_ALL" })}
+          onClick={() => removeAllItems()}
           className="p-2.5 rounded-lg border-2 border-black flex-col justify-center items-center gap-2.5 inline-flex"
         >
           {/* Button */}

@@ -1,79 +1,26 @@
 "use client";
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  ReactNode,
-  Dispatch,
-} from "react";
+import React, { ReactNode, useContext, useReducer } from "react";
+import {
+  ProductContext,
+  Products,
+  StateSelector,
+} from "@/app/cartapi/Products";
+import { Product } from "@/app/cartapi/Product";
 
-export interface Product {
-  id: string;
-  name: string;
-  stats: { value: string; stat: string }[];
-  price: number;
-}
-
-interface CartState {
-  cart: Product[];
-}
-
-type CartAction =
-  | { type: "ADD_TO_CART"; item: Product }
-  | { type: "REMOVE_FROM_CART"; id: string }
-  | { type: "REMOVE_ALL" };
-
-const CartContext = createContext<
-  | {
-      state: CartState;
-      dispatch: Dispatch<CartAction>;
-    }
-  | undefined
->(undefined);
-// Функция для генерации случайного числа в заданном диапазоне
-export function randomInt(): string {
-  // Создаем уникальный идентификатор на основе текущего времени и случайного числа
-  const timestamp = new Date().getTime();
-  const randomNumber = Math.random() * 1000000;
-  return `${timestamp}${randomNumber}`;
-}
-
-const cartReducer = (state: CartState, action: CartAction): CartState => {
-  switch (action.type) {
-    case "ADD_TO_CART":
-      const newItem: Product = {
-        ...action.item,
-        id: randomInt(),
-      }; // Генерация случайного числового id
-      return { ...state, cart: [...state.cart, newItem] };
-    case "REMOVE_FROM_CART":
-      return {
-        ...state,
-        cart: state.cart.filter((item) => item.id !== action.id),
-      };
-    case "REMOVE_ALL":
-      return {
-        ...state,
-        cart: [],
-      };
-
-    default:
-      return state;
-  }
-};
-
+const initialProducts: Products = { vec: [] };
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(cartReducer, { cart: [] });
+  const [state, dispatch] = useReducer(StateSelector, initialProducts);
 
   return (
-    <CartContext.Provider value={{ state, dispatch }}>
+    <ProductContext.Provider value={{ state, dispatch }}>
       {children}
-    </CartContext.Provider>
+    </ProductContext.Provider>
   );
 };
 
+/// Get state of cart
 export const useCart = () => {
-  const context = useContext(CartContext);
+  const context = useContext(ProductContext);
   if (!context) {
     throw new Error("useCart must be used within a CartProvider");
   }
@@ -82,18 +29,52 @@ export const useCart = () => {
 
 export function useGetPrice(): number {
   const { state } = useCart();
-  let price = 0;
-  state.cart.map((item) => {
-    price += item.price;
-  });
-  return price;
+  return state.vec.reduce((total, item) => total + item.price, 0);
 }
-export function useRemoveFromCart() {
-  const { dispatch } = useCart();
 
-  const removeAllItems = () => {
-    dispatch({ type: "REMOVE_ALL" });
+export function useGetSorted() {
+  const { state } = useCart();
+
+  const priceAsc = () => {
+    return [...state.vec].sort((a, b) => a.price - b.price);
   };
 
-  return { removeAllItems };
+  const priceDesc = () => {
+    return [...state.vec].sort((a, b) => b.price - a.price);
+  };
+
+  const nameAsc = () => {
+    return [...state.vec].sort((a, b) => a.name.localeCompare(b.name));
+  };
+
+  const nameDesc = () => {
+    return [...state.vec].sort((a, b) => b.name.localeCompare(a.name));
+  };
+
+  return {
+    priceAsc,
+    priceDesc,
+    nameAsc,
+    nameDesc,
+  };
+}
+
+export function usePushToCart() {
+  const { dispatch } = useCart();
+  const add = (item: Product) => {
+    dispatch({ type: "add", item });
+  };
+
+  return { add };
+}
+
+export function useRemoveFromCart() {
+  const { dispatch } = useCart();
+  const removeAllItems = () => {
+    dispatch({ type: "rm_all" });
+  };
+  const removeItemById = (id: number) => {
+    dispatch({ type: "rm_by_id", id });
+  };
+  return { removeAllItems, removeItemById };
 }

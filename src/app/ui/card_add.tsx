@@ -1,48 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Product, useCart, randomInt } from "../cartapi/cart";
+import React, { useState } from "react";
+import { usePushToCart } from "../cartapi/cart";
+import { Product } from "@/app/cartapi/Product";
+import { rand_num } from "@/app/cartapi/random";
+import Modal from "@/app/cartapi/modal";
 
 export default function CartItemAdd(item: Product) {
-  const { dispatch } = useCart();
+  const {add} = usePushToCart();
+
   const [showModal, setShowModal] = useState<boolean>(false);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setShowModal(false);
-      }
-    };
-
-    if (showModal) {
-      document.addEventListener("mousedown", handleOutsideClick);
-    } else {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [showModal]);
 
   return (
     <div
-      key={`${randomInt()}`}
+      key={`${rand_num()}`}
       className="w-56 h-96 px-6 py-4 rounded-lg border-4 border-black flex-col justify-center items-start gap-5 inline-flex transition duration-300 ease-in-out transform hover:scale-105"
     >
       <div className="text-black text-3xl font-normal font-itim">
         {item.name}
       </div>
       <div className="text-black text-2xl font-normal font-itim">Stats:</div>
-      {item.stats.map((stat) => (
+      {item.stats.vec.map((stat) => (
         <p
-          key={`${randomInt()}`}
+          key={`${rand_num()}`}
           className="self-stretch grow shrink basis-0 text-black text-base font-normal font-itim"
         >
           {stat.value} {stat.stat}
@@ -56,7 +39,7 @@ export default function CartItemAdd(item: Product) {
       </div>
       <div className="justify-center items-center gap-5 inline-flex">
         <button
-          onClick={() => dispatch({ type: "ADD_TO_CART", item: item })}
+          onClick={() => add(item)}
           className="p-2.5 rounded-lg border-2 border-black flex-col justify-center items-center gap-2.5 inline-flex transition duration-300 ease-in-out transform hover:scale-105"
         >
           <div className="text-black text-3xl font-normal font-itim ">Pay</div>
@@ -68,13 +51,7 @@ export default function CartItemAdd(item: Product) {
           <div className="text-black text-3xl font-normal font-itim">FAQ</div>
         </div>
       </div>
-      {showModal && (
-        // FAQ
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div
-            className="bg-white p-6 rounded-lg flex flex-col justify-between gap-2"
-            ref={modalRef}
-          >
+        <Modal toggleModal={toggleModal} isOpen={showModal}>
             {/* Your FAQ content goes here */}
             <h2>Frequently Asked Questions</h2>
             <p>This is where you put your FAQ content.</p>
@@ -85,9 +62,7 @@ export default function CartItemAdd(item: Product) {
             >
               Close
             </button>
-          </div>
-        </div>
-      )}
+        </Modal>
     </div>
   );
 }
