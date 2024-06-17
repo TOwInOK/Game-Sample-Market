@@ -15,14 +15,13 @@ export default function Social_button() {
         <Link
           href={item.href}
           key={item.name}
-          className="transition duration-300 ease-in-out transform hover:rotate-180"
+          className="transition duration-[600ms] ease-linear transform hover:rotate-[360deg] dark:bg-white dark:rounded-3xl blur-sm hover:blur-0"
         >
           <Image
             src={item.icon}
             alt={`icon: ${item.name}`}
-            width={25}
-            height={25}
-            className="transition duration-1200 ease-in-out transform hover:size-8"
+            width={30}
+            height={30}
           />
         </Link>
       ))}

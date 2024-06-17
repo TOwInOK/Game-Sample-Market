@@ -1,52 +1,48 @@
-"use client";
-import React, { useState } from "react";
+"use server";
+import { auth, signIn, signOut } from "@/auth";
 
-const Page: React.FC = () => {
-  const [login, setLogin] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+export default async function Page() {
+  function GoogleIn() {
+    return (
+      <form
+        action={async () => {
+          "use server";
+          await signIn("google", { callbackUrl: "/" });
+        }}
+      >
+        <button type="submit">Sign in with google</button>
+      </form>
+    );
+  }
 
-  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLogin(e.target.value);
-  };
+  function SignOut() {
+    return (
+      <form
+        action={async () => {
+          "use server";
+          await signOut();
+        }}
+      >
+        <button type="submit">Log Out</button>
+      </form>
+    );
+  }
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    // You can handle form submission here
-    console.log("Login:", login);
-    console.log("Password:", password);
-  };
+  let session = await auth();
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className=" px-2.5 py-5 rounded-lg border-2  justify-center items-end gap-2.5 inline-flex">
-        <div className=" text-3xl font-normal font-itim">Login:</div>
-        <input
-          type="text"
-          value={login}
-          onChange={handleLoginChange}
-          className="w-full border-b-4 "
-        />
-      </div>
-      <div className="px-2.5 py-5 rounded-lg border-2  justify-center items-end gap-2.5 inline-flex">
-        <div className=" text-3xl font-normal font-itim">Password:</div>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          className="w-full border-b-4 "
-        />
-      </div>
-      <div
-        className="transition duration-300 ease-in-out transform hover:scale-105 p-2.5 rounded-lg border-2  flex-col justify-center items-center gap-2.5 flex cursor-pointer"
-        onClick={handleSubmit}
-      >
-        <div className=" text-3xl font-normal font-itim">Submit</div>
-      </div>
-    </div>
+    <section className="flex flex-col gap-12">
+      {session?.user?.email ? (
+        <div>
+          <h1>You are signed</h1>
+          <SignOut />
+        </div>
+      ) : (
+        <div className="grid">
+          <h1>use social</h1>
+          <div>{<GoogleIn />}</div>
+        </div>
+      )}
+    </section>
   );
-};
-
-export default Page;
+}

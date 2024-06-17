@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CartItemAdd from "../ui/card_add";
 import { Products } from "@/app/api/products/Products";
-import { getProducts } from "@/app/api/products/crud";
+import { getProducts } from "@/app/api/crud";
 
 export default function Page() {
   const [products, setProducts] = useState<Products>({ vec: [] });
@@ -23,7 +23,7 @@ export default function Page() {
     };
 
     fetchProducts().then();
-  }, []); // Пустой массив зависимостей гарантирует, что useEffect сработает только один раз
+  }, []);
 
   useEffect(() => {
     const filtered = products.vec.filter((product) =>
@@ -46,7 +46,7 @@ export default function Page() {
         ) && product.name.toLowerCase().includes(nameSearch.toLowerCase()),
     );
     setSortedProducts({ vec: filtered });
-  }, [valueSearch, statSearch, nameSearch]);
+  }, [valueSearch, statSearch, nameSearch, products.vec]);
 
   const sortByPriceAsc = () => {
     const sorted = products.vec.sort((a, b) => a.price - b.price);
@@ -122,13 +122,15 @@ export default function Page() {
         />
       </div>
       {/* Cards */}
-      <div className="justify-center items-start gap-24 grid grid-cols-3 pl-14 py-4 h-96 overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="flex justify-around w-full">
         {sortedProducts.vec.length === 0 ? (
-          <p className="col-span-3">Your cart is empty</p>
+          <p className="text-3xl h-96">Loading...</p>
         ) : (
-          sortedProducts.vec.map((item) => (
-            <CartItemAdd key={item.id} {...item} />
-          ))
+          <div className="grid grid-cols-3 gap-40 overflow-y-scroll h-96 p-4 no-scrollbar scroll-smooth">
+            {sortedProducts.vec.map((item) => (
+              <CartItemAdd key={item.id} {...item} />
+            ))}
+          </div>
         )}
       </div>
     </div>
