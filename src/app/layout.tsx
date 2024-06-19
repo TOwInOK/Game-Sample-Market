@@ -3,6 +3,7 @@ import { Itim } from "next/font/google";
 import NavBar from "./ui/nav_bar";
 import { CartProvider } from "@/app/api/cart";
 import "./globals.css";
+import { SessionProvider } from "next-auth/react";
 
 const itim = Itim({
   subsets: ["latin"],
@@ -24,16 +25,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-screen h-screen p-28 flex-col justify-start items-start gap-2.5 flex dark:bg-black dark:text-white dark:border-white`}
+        className={`w-screen h-screen p-28 flex-col justify-start items-start gap-2.5 flex bg-white text-black fill-black dark:text-white dark:bg-black dark:fill-white`}
       >
-        <CartProvider>
-          <NavBar />
-          <main
-            className={`${itim.className} self-stretch grow shrink basis-0 px-5 py-9 rounded-lg border-8  border-dashed flex justify-center items-center gap-14`}
-          >
-            {children}
-          </main>
-        </CartProvider>
+        <SessionProvider>
+          <CartProvider>
+            <NavBar />
+            <main
+              className={`${itim.className} self-stretch grow shrink basis-0 px-5 py-9 rounded-lg border-8  border-dashed flex justify-center items-center gap-14 border-black dark:border-white`}
+            >
+              {children}
+            </main>
+          </CartProvider>
+        </SessionProvider>
       </body>
     </html>
   );

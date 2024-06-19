@@ -1,6 +1,6 @@
-import { Product } from "@/app/api/products/Product";
 import { createContext, Dispatch } from "react";
 import { rand_num } from "../random";
+import { Product } from "@prisma/client";
 
 export interface Products {
   vec: Product[];

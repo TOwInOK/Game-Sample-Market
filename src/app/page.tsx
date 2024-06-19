@@ -18,7 +18,7 @@ export default async function Home() {
             register
           </Link>
         </button> */}
-        <button className="transition duration-700 ease-in-out transform hover:scale-105 hover:-rotate-[1deg] px-10 py-1.5 origin-top-left rotate-[20deg] rounded-xl border flex justify-center items-center gap-2.5">
+        <button className="transition duration-700 ease-in-out transform hover:scale-105 hover:-rotate-[1deg] px-10 py-1.5 origin-top-left rotate-[20deg] rounded-xl border border-black dark:border-white flex justify-center items-center gap-2.5">
           <Link
             href="/products"
             id="go_product"
@@ -30,7 +30,7 @@ export default async function Home() {
         {session?.user?.email ? (
           <></>
         ) : (
-          <button className="transition duration-700 ease-in-out transform hover:scale-105 hover:-rotate-[1deg] px-10 py-1.5 origin-top-left rotate-[20deg] rounded-xl border flex justify-center items-center gap-2.5">
+          <button className="transition duration-700 ease-in-out transform hover:scale-105 hover:-rotate-[1deg] px-10 py-1.5 origin-top-left rotate-[20deg] rounded-xl border border-black dark:border-white flex justify-center items-center gap-2.5">
             <Link
               href="/login"
               id="login"

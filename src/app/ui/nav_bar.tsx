@@ -1,9 +1,9 @@
 import Cart from "@/app/ui/cart";
 import NavLinks from "./nav_links";
 import { auth, signOut } from "@/auth";
-import React from "react";
+import React, { Suspense } from "react";
 
-function SignOut({ children }: { children: React.ReactNode }) {
+export function SignOut({ children }: { children: React.ReactNode }) {
   return (
     <form
       action={async () => {
@@ -20,16 +20,17 @@ function SignOut({ children }: { children: React.ReactNode }) {
 export default async function NavBar() {
   let session = await auth();
   return (
-    <div className="w-full items-center justify-between gap-24 inline-flex">
-      <NavLinks />
+    <nav className="w-full items-center justify-between gap-24 inline-flex">
+      <Suspense fallback={<div>Loading...</div>}>
+        <NavLinks />
+      </Suspense>
       {session ? (
         <div className="flex gap-4 items-center">
-          <SignOut>{``}</SignOut>
           <Cart />
         </div>
       ) : (
         <div className="p-2.5">{""}</div>
       )}
-    </div>
+    </nav>
   );
 }

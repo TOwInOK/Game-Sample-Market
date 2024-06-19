@@ -1,27 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import { Product, Stat } from "@/app/api/products/Product";
+
 import { createProduct } from "@/app/api/products/crud";
 import { rand_num } from "@/app/api/random";
+import { Product } from "@prisma/client";
 
 export default function ProductForm() {
   const [name, setName] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
+  const [faq, setFaq] = useState<string>("");
+  const [stat, setStat] = useState<string>("");
   const [price, setPrice] = useState<number>(0);
-  const [stats, setStats] = useState<Stat[]>([{ value: "", stat: "" }]);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [value, setValue] = useState<number>(0);
 
-  const addStatField = () => {
-    setStats([...stats, { value: "", stat: "" }]);
-  };
-  const rmStatField = (outerid: number) => {
-    setStats(stats.filter((item, id) => id !== outerid));
-  };
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (name === "") {
+    if (name === "" || faq === "" || about === "") {
       setTimeout(() => {
-        setSuccessMessage("Please set the name!");
+        setSuccessMessage("Please set the text!");
         // Спустя несколько секунд скрываем сообщение об успехе
         setTimeout(() => {
           setSuccessMessage(null);
@@ -29,18 +27,16 @@ export default function ProductForm() {
       }, 1000);
       return;
     } else {
-      stats.map((stat, value) => {
-        if (stat.stat === "" || stat.value === "") {
+      if (stat === "" || value === 0) {
+        setTimeout(() => {
+          setSuccessMessage("Please fill stats data");
+          // Спустя несколько секунд скрываем сообщение об успехе
           setTimeout(() => {
-            setSuccessMessage("Please fill stats data");
-            // Спустя несколько секунд скрываем сообщение об успехе
-            setTimeout(() => {
-              setSuccessMessage(null);
-            }, 3000);
-          }, 1000);
-          return;
-        }
-      });
+            setSuccessMessage(null);
+          }, 3000);
+        }, 1000);
+        return;
+      }
     }
 
     try {
@@ -48,17 +44,23 @@ export default function ProductForm() {
         id: rand_num(),
         name: name,
         price: price,
-        stats: stats,
+        stat: stat,
+        value: value,
+        about: about,
+        faq: faq,
       };
       const data = await createProduct(product);
-      console.log(data); // Здесь ты можешь работать с полученными данными
+      console.log(data);
 
       setTimeout(() => {
         setSuccessMessage("Product successfully created!");
         // Очищаем форму
         setName("");
+        setStat("");
+        setFaq("");
+        setAbout("");
         setPrice(0);
-        setStats([{ value: "", stat: "" }]);
+        setValue(0);
         // Спустя несколько секунд скрываем сообщение об успехе
         setTimeout(() => {
           setSuccessMessage(null);
@@ -68,7 +70,7 @@ export default function ProductForm() {
     } catch (error) {
       console.error("Error pushing products:", error);
       setTimeout(() => {
-        setSuccessMessage("Data create is confused, check log");
+        setSuccessMessage("Data create is confused, proof log");
 
         // Спустя несколько секунд скрываем сообщение об успехе
         setTimeout(() => {
@@ -77,16 +79,6 @@ export default function ProductForm() {
       }, 1000);
       return;
     }
-  };
-
-  const handleStatChange = (
-    index: number,
-    field: keyof Stat,
-    value: string,
-  ) => {
-    const updatedStats = [...stats];
-    updatedStats[index][field] = value;
-    setStats(updatedStats);
   };
 
   return (
@@ -100,7 +92,7 @@ export default function ProductForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="name"
-            className="p-2 border-2 dark:bg-black flex w-full"
+            className="p-2 border-2 border-black dark:border-white flex w-full"
           />
         </label>
         <label className="flex gap-4 items-center">
@@ -110,60 +102,60 @@ export default function ProductForm() {
             value={price}
             onChange={(e) => setPrice(e.target.valueAsNumber)}
             placeholder="price"
-            className="ml-1.5 p-2 border-2 dark:bg-black flex w-full"
+            className="ml-1.5 p-2 border-2 border-black dark:border-white flex w-full"
           />
         </label>
-        <h3 className="flex justify-around">Stats:</h3>
-        {stats.map((stat, index) => (
-          <div className="flex gap-4" key={index}>
-            <label className="flex gap-4 items-center">
-              Value:
-              <input
-                type="text"
-                value={stat.value}
-                onChange={(e) =>
-                  handleStatChange(index, "value", e.target.value)
-                }
-                placeholder="value"
-                className="p-2 border-2 dark:bg-black"
-              />
-            </label>
-            <label className="flex gap-4 items-center">
-              Stat:
-              <input
-                type="text"
-                value={stat.stat}
-                onChange={(e) =>
-                  handleStatChange(index, "stat", e.target.value)
-                }
-                placeholder="stat"
-                className="p-2 border-2 dark:bg-black"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() => rmStatField(index)}
-              className="p-2 border-2 transition duration-300 ease-in-out transform hover:scale-110"
-            >
-              X
-            </button>
-          </div>
-        ))}
-        <div className="grid gap-4">
-          <button
-            type="button"
-            onClick={addStatField}
-            className="p-2 border-2 transition duration-300 ease-in-out transform hover:scale-110"
-          >
-            Add Stat
-          </button>
-          <button
-            type="submit"
-            className="p-2 border-2 transition duration-300 ease-in-out transform hover:scale-110"
-          >
-            Create
-          </button>
+        <label className="flex gap-4 items-center">
+          About:
+          <input
+            type="text"
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
+            placeholder="about"
+            className=" p-2 border-2 border-black dark:border-white flex w-full"
+          />
+        </label>
+        <label className="flex gap-4 items-center">
+          faq:
+          <input
+            type="text"
+            value={faq}
+            onChange={(e) => setFaq(e.target.value)}
+            placeholder="faq"
+            className="ml-1.5 p-2 border-2 border-black dark:border-white flex w-full max-h-32"
+          />
+        </label>
+        <h3 className="flex justify-around">Stat:</h3>
+
+        <div className="flex gap-4">
+          <label className="flex gap-4 items-center">
+            Value:
+            <input
+              type="number"
+              value={value}
+              onChange={(e) => setValue(e.target.valueAsNumber)}
+              placeholder="value"
+              className="p-2 border-2 border-black dark:border-white"
+            />
+          </label>
+          <label className="flex gap-4 items-center">
+            Stat:
+            <input
+              type="text"
+              value={stat}
+              onChange={(e) => setStat(e.target.value)}
+              placeholder="stat"
+              className="p-2 border-2 border-black dark:border-white"
+            />
+          </label>
         </div>
+
+        <button
+          type="submit"
+          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110"
+        >
+          Create
+        </button>
       </form>
       {successMessage && <p className="text-xl font-bold">{successMessage}</p>}
     </div>

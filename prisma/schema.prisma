@@ -13,17 +13,29 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Product {
-  id Int @id @default(autoincrement())
-  name String
-  stats Stat[]
-  price Int
+model User {
+  email    String   @id @unique
+  name     String
+  password String?
+  coins    Int
+  cart     Cart?
 }
 
-model Stat {
+model Cart {
   id        Int      @id @default(autoincrement())
-  value     String
+  user_mail String   @unique
+  user      User     @relation(fields: [user_mail], references: [email])
+  products  Product[]
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  name      String
+  about     String?
+  faq       String?
+  price     Int
+  value     Int
   stat      String
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
+  stars     Int @default(0)
+  carts     Cart[]
 }

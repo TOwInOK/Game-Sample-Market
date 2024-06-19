@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import CartItemAdd from "../ui/card_add";
 import { Products } from "@/app/api/products/Products";
-import { getProducts } from "@/app/api/crud";
+import { getProducts } from "@/app/api/products/crud";
 
 export default function Page() {
   const [products, setProducts] = useState<Products>({ vec: [] });
@@ -16,7 +16,7 @@ export default function Page() {
     const fetchProducts = async () => {
       try {
         const products = await getProducts();
-        setProducts(products);
+        setProducts({ vec: products });
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -26,12 +26,10 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    const filtered = products.vec.filter((product) =>
-      product.stats.some(
-        (stat) =>
-          stat.value.toString().includes(valueSearch) &&
-          stat.stat.includes(statSearch),
-      ),
+    const filtered = products.vec.filter(
+      (product) =>
+        product.stat.includes(statSearch) &&
+        product.value.toString().includes(valueSearch),
     );
     setSortedProducts({ vec: filtered });
   }, [valueSearch, statSearch, products.vec]);
@@ -39,11 +37,9 @@ export default function Page() {
   useEffect(() => {
     const filtered = products.vec.filter(
       (product) =>
-        product.stats.some(
-          (stat) =>
-            stat.value.toString().includes(valueSearch) &&
-            stat.stat.includes(statSearch),
-        ) && product.name.toLowerCase().includes(nameSearch.toLowerCase()),
+        product.stat.includes(statSearch) &&
+        product.value.toString().includes(valueSearch) &&
+        product.name.toLowerCase().includes(nameSearch.toLowerCase()),
     );
     setSortedProducts({ vec: filtered });
   }, [valueSearch, statSearch, nameSearch, products.vec]);
@@ -73,25 +69,25 @@ export default function Page() {
       {/* Sorted buttons */}
       <div className="flex justify-between">
         <button
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110"
+          className="p-4 border-2 border-black dark:border-white  transition duration-300 ease-in-out transform hover:scale-110"
           onClick={sortByPriceAsc}
         >
           Price (Low to High)
         </button>
         <button
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110"
+          className="p-4 border-2  border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110"
           onClick={sortByPriceDesc}
         >
           Price (High to Low)
         </button>
         <button
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110"
+          className="p-4 border-2 border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110"
           onClick={sortByNameAsc}
         >
           Name (A to Z)
         </button>
         <button
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110"
+          className="p-4 border-2 border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110"
           onClick={sortByNameDesc}
         >
           Name (Z to A)
@@ -104,29 +100,29 @@ export default function Page() {
           value={valueSearch}
           onChange={(e) => setValueSearch(e.target.value)}
           placeholder="Value"
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110 dark:bg-black"
+          className="p-4 border-2 border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110 dark:bg-black"
         />
         <input
           type="text"
           value={nameSearch}
           onChange={(e) => setNameSearch(e.target.value)}
           placeholder="Name"
-          className="p-4 border-2  transition duration-300 ease-in-out transform hover:scale-110 grow dark:bg-black"
+          className="p-4 border-2 border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110 grow dark:bg-black"
         />
         <input
           type="text"
           value={statSearch}
           onChange={(e) => setStatSearch(e.target.value)}
           placeholder="Stat"
-          className="p-4 border-2 transition duration-300 ease-in-out transform hover:scale-110 dark:bg-black"
+          className="p-4 border-2 border-black dark:border-white transition duration-300 ease-in-out transform hover:scale-110 dark:bg-black"
         />
       </div>
       {/* Cards */}
       <div className="flex justify-around w-full">
         {sortedProducts.vec.length === 0 ? (
-          <p className="text-3xl h-96">Loading...</p>
+          <p className="text-3xl h-[430px]">Loading...</p>
         ) : (
-          <div className="grid grid-cols-3 gap-40 overflow-y-scroll h-96 p-4 no-scrollbar scroll-smooth">
+          <div className="grid grid-cols-3 gap-40 overflow-y-scroll h-[430px] p-4 no-scrollbar scroll-smooth">
             {sortedProducts.vec.map((item) => (
               <CartItemAdd key={item.id} {...item} />
             ))}

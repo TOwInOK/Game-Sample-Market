@@ -15,6 +15,19 @@ export default async function Page() {
     );
   }
 
+  function GithubIn() {
+    return (
+      <form
+        action={async () => {
+          "use server";
+          await signIn("github");
+        }}
+      >
+        <button type="submit">Sign in with github</button>
+      </form>
+    );
+  }
+
   function SignOut() {
     return (
       <form
@@ -38,9 +51,16 @@ export default async function Page() {
           <SignOut />
         </div>
       ) : (
-        <div className="grid">
-          <h1>use social</h1>
-          <div>{<GoogleIn />}</div>
+        <div className="grid gap-6">
+          <h1 className="text-3xl font-bold ">Sign with:</h1>
+          <div className="grid gap-7">
+            <div className="text-xl transition duration-100 ease-linear transform hover:rotate-12 ">
+              {<GoogleIn />}
+            </div>
+            <div className="text-xl transition duration-100 ease-linear transform hover:rotate-12 ">
+              {<GithubIn />}
+            </div>
+          </div>
         </div>
       )}
     </section>

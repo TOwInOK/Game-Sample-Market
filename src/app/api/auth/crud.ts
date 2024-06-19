@@ -1,0 +1,73 @@
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+// Example usage:
+async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+}
+
+async function deleteUserByName(email: string) {
+  return prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+}
+
+async function createUser(email: string, name: string, password?: string) {
+  return prisma.user.create({
+    data: {
+      email,
+      name,
+      password,
+      coins: 0,
+    },
+  });
+}
+
+async function updateUser(email: string, password: string) {
+  return prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      password,
+    },
+  });
+}
+
+async function addCoins(email: string, coins: number) {
+  return prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      coins: {
+        increment: coins,
+      },
+    },
+  });
+}
+
+function existUser(email: string) {
+  let user = prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  return user !== null;
+}
+
+export {
+  getUserByEmail,
+  deleteUserByName,
+  createUser,
+  updateUser,
+  addCoins,
+  existUser,
+};
