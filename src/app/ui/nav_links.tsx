@@ -32,7 +32,6 @@ export default function NavLinks() {
   useEffect(() => {
     const fetchPrivilege = async () => {
       const res = await fetch("/api/auth");
-      const user = await res.json();
 
       if (res.status === 200) {
         setProt(true);
@@ -48,7 +47,7 @@ export default function NavLinks() {
     <div className="grow shrink basis-0 h-10 justify-start items-start gap-9 flex">
       {links.map((link) => {
         return (link.private && !link.private && !data?.user) ||
-          (link.private && link.protected && !data?.user) ? null : (
+          (link.private && !link.protected && !data?.user) ? null : (
           <Link key={link.name} href={link.href}>
             <p
               className={clsx(
