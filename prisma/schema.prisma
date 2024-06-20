@@ -8,11 +8,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
 datasource db {
   provider = "postgresql"
   url = env("POSTGRES_PRISMA_URL") // uses connection pooling
@@ -20,11 +15,12 @@ datasource db {
 }
 
 model User {
-  email    String   @id @unique
-  name     String
-  password String?
-  coins    Int
-  cart     Cart?
+  email     String   @id @unique
+  name      String
+  password  String?
+  coins     Int
+  cart      Cart?
+  privilege String   @default("user")
 }
 
 model Cart {

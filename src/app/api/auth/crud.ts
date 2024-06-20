@@ -1,3 +1,4 @@
+"use server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -9,6 +10,19 @@ async function getUserByEmail(email: string) {
       email,
     },
   });
+}
+
+async function isAdmin(email: string) {
+  let user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      privilege: true,
+    },
+  });
+
+  return user?.privilege === "Admin";
 }
 
 async function deleteUserByName(email: string) {
@@ -54,7 +68,7 @@ async function addCoins(email: string, coins: number) {
   });
 }
 
-function existUser(email: string) {
+async function existUser(email: string) {
   let user = prisma.user.findUnique({
     where: {
       email: email,
@@ -70,4 +84,5 @@ export {
   updateUser,
   addCoins,
   existUser,
+  isAdmin,
 };

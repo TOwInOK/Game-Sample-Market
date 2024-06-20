@@ -30,16 +30,17 @@ export const {
           nextUrl.pathname.startsWith("/cart") ||
           nextUrl.pathname.startsWith("/account") ||
           nextUrl.pathname.startsWith("/proof") ||
-          nextUrl.pathname.startsWith("/game")
+          nextUrl.pathname.startsWith("/game") ||
+          nextUrl.pathname.startsWith("/products/create")
         ) {
           return Response.redirect(new URL("/login", nextUrl));
         }
       }
-      if (auth?.user?.name !== "TOwInOK") {
-        if (nextUrl.pathname.startsWith("/create")) {
-          return Response.redirect(new URL("/products", nextUrl));
-        }
-      }
+      // if (auth?.user?.name !== "TOwInOK") {
+      //   if (nextUrl.pathname.startsWith("/create")) {
+      //     return Response.redirect(new URL("/products", nextUrl));
+      //   }
+      // }
       return true;
     },
   },
