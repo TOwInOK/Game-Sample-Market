@@ -48,6 +48,7 @@ export default function ProductForm() {
         value: value,
         about: about,
         faq: faq,
+        stars: 0,
       };
       const data = await createProduct(product);
       console.log(data);

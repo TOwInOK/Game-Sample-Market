@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useRemoveFromCart } from "@/app/api/cart";
 import Modal from "@/app/api/modal";
 import { rand_num } from "@/app/api/random";
 import { Product } from "@prisma/client";
@@ -11,7 +10,6 @@ interface CartItemProps {
 }
 
 const CartItemDelete: React.FC<CartItemProps> = ({ item, onDelete, coins }) => {
-  const { removeItemById } = useRemoveFromCart();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const toggleModal = () => {

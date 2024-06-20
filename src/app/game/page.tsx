@@ -26,7 +26,6 @@ export default function Page() {
   const [randomList, setRandomList] = useState<Product[]>([]);
   const { data } = useSession();
   const [isCorrect, setIsCorrect] = useState(false);
-  const [loading, setLoading] = useState(false);
   // Stat for right item
   const listOfStats = [
     "armor",
