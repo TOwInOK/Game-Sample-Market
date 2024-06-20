@@ -16,6 +16,7 @@ const links = [
   { name: "about", href: "/about", private: false, protected: false },
   { name: "game", href: "/game", private: true, protected: false },
   { name: "profile", href: "/profile", private: true, protected: false },
+  { name: "check_account", href: "/proof", private: true, protected: false },
   {
     name: "MANAGE_ITEMS",
     href: "/products/create",

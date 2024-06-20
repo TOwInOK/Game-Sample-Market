@@ -20,9 +20,9 @@ export const {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      if (auth?.user) {
+      if (auth?.user?.email) {
         if (nextUrl.pathname.startsWith("/login")) {
-          return Response.redirect(new URL("/", nextUrl));
+          return Response.redirect(new URL("/proof", nextUrl));
         }
       } else {
         if (
@@ -36,11 +36,7 @@ export const {
           return Response.redirect(new URL("/login", nextUrl));
         }
       }
-      // if (auth?.user?.name !== "TOwInOK") {
-      //   if (nextUrl.pathname.startsWith("/create")) {
-      //     return Response.redirect(new URL("/products", nextUrl));
-      //   }
-      // }
+
       return true;
     },
   },

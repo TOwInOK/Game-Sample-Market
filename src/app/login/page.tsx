@@ -1,5 +1,6 @@
 "use server";
 import { auth, signIn, signOut } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   function GoogleIn() {
@@ -40,8 +41,10 @@ export default async function Page() {
       </form>
     );
   }
-
   let session = await auth();
+  if (session?.user?.email) {
+    redirect("/proof");
+  }
 
   return (
     <section className="flex flex-col gap-12">

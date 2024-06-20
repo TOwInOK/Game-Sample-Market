@@ -19,7 +19,12 @@ export async function GET(request: NextRequest) {
           );
         }
       } else {
-        return NextResponse.json({ message: "User already exists" });
+        return NextResponse.json(
+          { message: "User already exists" },
+          {
+            status: 200,
+          },
+        );
       }
     } else {
       return NextResponse.json({ error: "No session found" }, { status: 400 });
