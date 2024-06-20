@@ -11,6 +11,7 @@ export const createProduct = async (product: Product): Promise<Product> => {
       stat: product.stat,
       about: product.about,
       faq: product.faq,
+      stars: product.stars,
     },
   });
 };

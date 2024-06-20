@@ -27,7 +27,7 @@ export default function ProductForm() {
     };
 
     fetchPrivilege();
-  }, [router]);
+  }, []);
 
   const [name, setName] = useState<string>("");
   const [about, setAbout] = useState<string>("");
@@ -81,7 +81,7 @@ export default function ProductForm() {
       }, 1000);
       return;
     } else {
-      if (stat === "" || value === 0) {
+      if (stat === "" || stars === 0 || value === 0) {
         setTimeout(() => {
           setSuccessMessage("Please fill stats data");
           // Спустя несколько секунд скрываем сообщение об успехе
@@ -102,11 +102,12 @@ export default function ProductForm() {
         value: value ? value : 0,
         about: about,
         faq: faq,
-        stars: stars ? stars : 0,
+        stars: stars ? stars : 10,
       };
       const data = await createProduct(product);
       // setProducts({ vec: [...products.vec, product] });
-      console.log(data);
+      console.log("data begin:", product);
+      console.log("data after:", data);
 
       setTimeout(() => {
         setSuccessMessage("Product successfully created!");
@@ -241,7 +242,7 @@ export default function ProductForm() {
             No items in products
           </div>
         ) : (
-          <div>
+          <div className="grid grid-cols-auto gap-6">
             {products.vec.map((item) => (
               <CardAdmin
                 key={item.id}

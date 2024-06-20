@@ -39,9 +39,8 @@ export default function CartItemAdd(item: Product) {
           <div>{item.price === 0 ? "free" : `$${item.price}`}</div>
         </div>
         <br />
-        <div className="flex gap-4">
-          <div>{item.stars === 0 ? "0" : `${item.stars}`}</div>
-          <div>☆</div>
+        <div className="text-nowrap">
+          {item.stars === 0 ? "0" : `${item.stars}/ 10 ☆`}
         </div>
       </div>
       <div className="justify-around items-center gap-5 flex w-full text-3xl font-normal font-itim">

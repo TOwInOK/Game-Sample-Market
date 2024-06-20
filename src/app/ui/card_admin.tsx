@@ -31,9 +31,15 @@ const CardAdmin: React.FC<CartItemProps> = ({ item, onDelete }) => {
           {item.price === 0 ? "free" : `$${item.price}`}
         </div>
       </div>
-      <div className="grid gap-2">
-        <h2>FAQ</h2>
-        {item.faq ? <p>{item.faq}</p> : <p>FAQ not found</p>}
+      <div className="grid gap-4">
+        <div className="flex gap-2">
+          <h2>FAQ: </h2>
+          {item.faq ? <p>{item.faq}</p> : <p>FAQ not found</p>}
+        </div>
+        <div className="flex gap-2">
+          <h2>Starts: </h2>
+          <div>{item.stars === 0 ? "0" : `${item.stars}/ 10 ☆`}</div>
+        </div>
       </div>
       <div
         onClick={deleteItem}
